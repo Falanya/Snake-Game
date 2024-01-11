@@ -1,3 +1,5 @@
+###################################################################################
+###################################################################################
 '''
 ⣿⣿⣿⣿⣿⣿⡷⣯⢿⣿⣷⣻⢯⣿⡽⣻⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣇⠸⣿⣿⣆⠹⣿⣿⢾⣟⣯⣿⣿⣿⣿⣿⣿⣽⣻⣿⣿⣿⣿⣿⣿⣿
 ⣿⣿⣿⣿⣿⣿⣻⣽⡿⣿⣎⠙⣿⣞⣷⡌⢻⣟⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣿⣿⣿⣿⣿⣿⡄⠹⣿⣿⡆⠻⣿⣟⣯⡿⣽⡿⣿⣿⣿⣿⣽⡷⣯⣿⣿⣿⣿⣿⣿
@@ -37,7 +39,9 @@ import random
 ####################################################################################
 pg.init()
 #Window game
-screen = pg.display.set_mode((400,400))
+WIDTH, HEIGHT = 400, 400
+EXPANSION_SIZE = 20
+screen = pg.display.set_mode((WIDTH + 2 * EXPANSION_SIZE, HEIGHT + 2 * EXPANSION_SIZE))
 pg.display.set_caption('Snake Game')
 
 #Var
@@ -49,8 +53,15 @@ body_snake = []
 length = 1
 
 #Food
-food_x = random.randint(0,19) * snake_part
-food_y = random.randint(0,19) * snake_part
+def generate_food_position():
+    while True:
+        food_x = random.randint(EXPANSION_SIZE, WIDTH + EXPANSION_SIZE - snake_part)
+        food_y = random.randint(EXPANSION_SIZE, HEIGHT + EXPANSION_SIZE - snake_part)
+        food_pos = (food_x // snake_part * snake_part, food_y // snake_part * snake_part)
+        # Kiểm tra xem food_pos có trùng với bất kỳ phần nào của thân rắn hay không
+        if food_pos not in body_snake:
+            return food_pos
+food_x, food_y = generate_food_position()
 
 #Speed snake
 clock = pg.time.Clock()
@@ -58,15 +69,19 @@ speed = 3
 
 #Def function
 def check_col():
-    if x < 0 or x > 400 or y < 0 or y > 400 or (x, y) in body_snake[:-1]:
+    # if x < 0 or x > 400 or y < 0 or y > 400 or (x, y) in body_snake[:-1]:
+    #     return False
+    # return True
+    if x < EXPANSION_SIZE or x >= WIDTH + EXPANSION_SIZE or y < EXPANSION_SIZE or y >= HEIGHT + EXPANSION_SIZE or (x, y) in body_snake[:-1]:
         return False
     return True
+
 def score_view():
-    font = pg.font.Font(None, 36)
+    font = pg.font.Font(None, 30)
     if gameplay:
-        score_txt = font.render(f'Score: {score}', True, (255,255,255))
+        score_txt = font.render(f'Score: {score}', True, (0,0,0))
         screen.blit(score_txt, (0,0))
-        hscore_txt = font.render(f'High Score: {highscore}', True, (255,255,255))
+        hscore_txt = font.render(f'High Score: {highscore}', True, (0,0,0))
         screen.blit(hscore_txt, (170,0))
     else:
         note_txt = font.render(f'Press SPACE to play again', True, (255,255,255))
@@ -104,7 +119,7 @@ while True:
                 gameplay = True
     #Clear screen
     screen.fill((0,0,0))
-    score_view()
+    #score_view()
     
     if gameplay:
         #Update snake position
@@ -122,13 +137,19 @@ while True:
             if score > highscore: highscore = score
             speed += 0.25
             #Random food
-            food_x = random.randint(0,19) * snake_part
-            food_y = random.randint(0,19) * snake_part
+            food_x, food_y = generate_food_position()
         #Draw snake
         for x,y in body_snake:
             pg.draw.rect(screen, (255,255,255), (x,y,snake_part, snake_part))
         #Draw food
         pg.draw.rect(screen, (255,0,0), (food_x, food_y, snake_part, snake_part))
+        
+        pg.draw.rect(screen, (255, 255, 0), (0, 0, WIDTH + 2 * EXPANSION_SIZE, EXPANSION_SIZE))
+        pg.draw.rect(screen, (255, 255, 0), (0, HEIGHT + EXPANSION_SIZE, WIDTH + 2 * EXPANSION_SIZE, EXPANSION_SIZE))
+        pg.draw.rect(screen, (255, 255, 0), (0, EXPANSION_SIZE, EXPANSION_SIZE, HEIGHT + EXPANSION_SIZE))
+        pg.draw.rect(screen, (255, 255, 0), (WIDTH + EXPANSION_SIZE, EXPANSION_SIZE, EXPANSION_SIZE, HEIGHT + EXPANSION_SIZE))
+        
+        score_view()
         gameplay = check_col()
         clock.tick(speed)
     else:
