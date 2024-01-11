@@ -72,14 +72,15 @@ def check_col():
 
 def score_view():
     font = pg.font.Font(None, 30)
-    if gameplay:
-        score_txt = font.render(f'Score: {score}', True, (0,0,0))
-        screen.blit(score_txt, (0,0))
-        hscore_txt = font.render(f'High Score: {highscore}', True, (0,0,0))
-        screen.blit(hscore_txt, (170,0))
-    else:
-        note_txt = font.render(f'Press SPACE to play again', True, (255,255,255))
-        screen.blit(note_txt, (0,0))
+    score_txt = font.render(f'Score: {score}', True, (0,0,0))
+    screen.blit(score_txt, (0,0))
+    hscore_txt = font.render(f'High Score: {highscore}', True, (0,0,0))
+    screen.blit(hscore_txt, (170,0))
+    
+def play_again():
+    font = pg.font.Font(None, 30)
+    note_txt = font.render(f'Press SPACE to play again', True, (255,255,255))
+    screen.blit(note_txt, (100,200))
 
 #Game loop
 gameplay = True
@@ -138,6 +139,7 @@ while True:
         #Draw food
         pg.draw.rect(screen, (255,0,0), (food_x, food_y, snake_part, snake_part))
         
+        #Draw wall
         pg.draw.rect(screen, (255, 255, 0), (0, 0, WIDTH + 2 * EXPANSION_SIZE, EXPANSION_SIZE))
         pg.draw.rect(screen, (255, 255, 0), (0, HEIGHT + EXPANSION_SIZE, WIDTH + 2 * EXPANSION_SIZE, EXPANSION_SIZE))
         pg.draw.rect(screen, (255, 255, 0), (0, EXPANSION_SIZE, EXPANSION_SIZE, HEIGHT + EXPANSION_SIZE))
@@ -147,12 +149,13 @@ while True:
         gameplay = check_col()
         clock.tick(speed)
     else:
+        play_again()
         #Reset game
         x = y = 200
         x_change = y_change = 0
         body_snake = []
         length = 1
-        score = 1
+        score = 0
         speed = 3
         last_direction = None
     
