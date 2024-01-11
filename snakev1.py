@@ -1,5 +1,3 @@
-###################################################################################
-###################################################################################
 '''
 ⣿⣿⣿⣿⣿⣿⡷⣯⢿⣿⣷⣻⢯⣿⡽⣻⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣇⠸⣿⣿⣆⠹⣿⣿⢾⣟⣯⣿⣿⣿⣿⣿⣿⣽⣻⣿⣿⣿⣿⣿⣿⣿
 ⣿⣿⣿⣿⣿⣿⣻⣽⡿⣿⣎⠙⣿⣞⣷⡌⢻⣟⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣿⣿⣿⣿⣿⣿⡄⠹⣿⣿⡆⠻⣿⣟⣯⡿⣽⡿⣿⣿⣿⣿⣽⡷⣯⣿⣿⣿⣿⣿⣿
@@ -54,13 +52,9 @@ length = 1
 
 #Food
 def generate_food_position():
-    while True:
-        food_x = random.randint(EXPANSION_SIZE, WIDTH + EXPANSION_SIZE - snake_part)
-        food_y = random.randint(EXPANSION_SIZE, HEIGHT + EXPANSION_SIZE - snake_part)
-        food_pos = (food_x // snake_part * snake_part, food_y // snake_part * snake_part)
-        # Kiểm tra xem food_pos có trùng với bất kỳ phần nào của thân rắn hay không
-        if food_pos not in body_snake:
-            return food_pos
+    food_x = random.randint(EXPANSION_SIZE, WIDTH + EXPANSION_SIZE - snake_part)
+    food_y = random.randint(EXPANSION_SIZE, HEIGHT + EXPANSION_SIZE - snake_part)
+    return food_x // snake_part * snake_part, food_y // snake_part * snake_part
 food_x, food_y = generate_food_position()
 
 #Speed snake

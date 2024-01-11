@@ -100,7 +100,6 @@ while True:
                 x_change = 0
                 y_change = snake_part
                 last_direction = 'down'
-                
             elif event.key == pg.K_SPACE:
                 gameplay = True
     #Clear screen
